@@ -1,7 +1,6 @@
 ﻿using FinalQuest.Characters;
 using FinalQuest.Entities;
 using FinalQuest.Monsters;
-using FinalQuest.Utils;
 using System;
 
 namespace FinalQuest.Game
@@ -40,6 +39,12 @@ namespace FinalQuest.Game
             Console.WriteLine("5- Flee");
         }
 
+        private void ExecuteAttack(Entity attacker, Entity target)
+        {
+            int damageDealt = attacker.Attack(target);
+            Console.WriteLine($"{attacker.Name} Dealt {damageDealt} to {target.Name}");
+        }
+
         // Determines which entity goes first based on speed (SPD) stat. If both have the same SPD(Speed Tie), it randomly selects one to go first.
         private Entity DetermineTurnOrder(Character player, Monster monster)
         {
@@ -55,7 +60,7 @@ namespace FinalQuest.Game
             }
             Random random = new Random();
             int turnRoll = random.Next(0, 2);
-            if (turnRoll== 0)
+            if (turnRoll == 0)
             {
                 Console.WriteLine($"{player.Name} Moves First");
                 return player;
@@ -72,61 +77,53 @@ namespace FinalQuest.Game
                 ShowBattleStatus(player, monster);
                 Entity firstEntity = DetermineTurnOrder(player, monster);
 
-                //if (firstEntity == player)
-                //{
-                //    ShowBattleMenu();
-                //}
-                //else
-                //{
-                //    monster.Attack(player);
-                //}
-
                 ShowBattleMenu();
                 string choice = Console.ReadLine();
                 
                 
                 switch (choice)
                 {
+                    /*Attack Mechanic
+                     * Gestisce attacchi in base alla SPD
+                     * Esempio: Player con SPD>, se infligge danno letale non viene attaccato dal mostro
+                     */
                     case "1":
                         if (firstEntity == player)
                         {
                             ShowBattleStatus(player, monster);
-                            int damageByPlayer = player.Attack(monster);
-                            Console.WriteLine($"{player.Name} Dealt {damageByPlayer} damage to {monster.Name}!");
+                            ExecuteAttack(player, monster);
 
-                            if (monster.HP <= 0)
+                            if (monster.IsDead)
                             {
                                 ShowBattleStatus(player, monster);
                                 Console.WriteLine($"You have defeated the {monster.Name}!");
                                 Console.WriteLine();
                                 return;
                             }
-                            else
-                            {
-                                int damageByMonster = monster.Attack(player);
-                                Console.WriteLine($"{monster.Name} Dealt {damageByMonster} damage to {player.Name}");
-                            }
-                            if (player.HP <= 0)
+
+                            ExecuteAttack(monster, player);
+
+                            if (player.IsDead)
                             {
                                 Console.WriteLine("You Died! Game Over!");
+                                Console.WriteLine();
+                                return; 
                             }
                         }
                         else
                         {
                             ShowBattleStatus(player, monster);
-                            int damageByMonster = monster.Attack(player);
-                            Console.WriteLine($"{monster.Name} Dealt {damageByMonster} damage to {player.Name}!");
-                            if (player.HP <= 0)
+                            ExecuteAttack(monster, player);
+                            if (player.IsDead)
                             {
                                 Console.WriteLine("You Died! Game Over!");
+                                Console.WriteLine();
                                 return;
                             }
-                            else
-                            {
-                                int damageByPlayer = player.Attack(monster);
-                                Console.WriteLine($"{player.Name} Dealt {damageByPlayer} damage to {monster.Name}!");
-                            }
-                            if (monster.HP <= 0)
+
+                            ExecuteAttack(player, monster);
+
+                            if (monster.IsDead)
                             {
                                 ShowBattleStatus(player, monster);
                                 Console.WriteLine($"You have defeated the {monster.Name}!");
@@ -144,7 +141,6 @@ namespace FinalQuest.Game
                     //    break;
                     }
                 }
-            }
-            
+            } 
         }
     }

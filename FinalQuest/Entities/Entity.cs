@@ -15,6 +15,8 @@ namespace FinalQuest.Entities
         public int DEF { get; set; }
         public int SPD { get; set; }
 
+        public bool IsDead => HP <= 0;
+
         public Entity(string name)
         {
             Name = name;
