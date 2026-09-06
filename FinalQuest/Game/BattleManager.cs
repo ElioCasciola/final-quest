@@ -1,0 +1,150 @@
+﻿using FinalQuest.Characters;
+using FinalQuest.Entities;
+using FinalQuest.Monsters;
+using FinalQuest.Utils;
+using System;
+
+namespace FinalQuest.Game
+{
+    internal class BattleManager
+    {
+        private void ShowBattleStatus(Character player, Monster monster)
+        {
+            Console.WriteLine("=== BATTLE STATUS ===");
+            Console.WriteLine();
+            Console.WriteLine(player.Name);
+            Console.WriteLine(player.Job);
+            Console.WriteLine($"HP: {player.HP}/{player.MaxHP}");
+            Console.WriteLine($"MP: {player.MP}/{player.MaxMP}");
+            Console.WriteLine($"ATT: {player.ATT}");
+            Console.WriteLine($"DEF: {player.DEF}");
+            Console.WriteLine($"SPD: {player.SPD}");
+            Console.WriteLine();
+            Console.WriteLine(monster.Name);
+            Console.WriteLine($"HP: {monster.HP}/{monster.MaxHP}");
+            Console.WriteLine($"MP: {monster.MP}/{monster.MaxMP}");
+            Console.WriteLine($"ATT: {monster.ATT}");
+            Console.WriteLine($"DEF: {monster.DEF}");
+            Console.WriteLine($"SPD: {monster.SPD}");
+            Console.WriteLine();
+        }
+
+        private void ShowBattleMenu()
+        {
+            Console.WriteLine("=== BATTLE MENU ===");
+            Console.WriteLine("It's Your Turn, Choose Your Action!");
+            Console.WriteLine("1- Attack");
+            Console.WriteLine("2- Defend");
+            Console.WriteLine("3- Use Skill/Magic");
+            Console.WriteLine("4- Use Item");
+            Console.WriteLine("5- Flee");
+        }
+
+        // Determines which entity goes first based on speed (SPD) stat. If both have the same SPD(Speed Tie), it randomly selects one to go first.
+        private Entity DetermineTurnOrder(Character player, Monster monster)
+        {
+            if (player.SPD > monster.SPD)
+            {
+                Console.WriteLine($"{player.Name} Moves First");
+                return player;
+            }
+            if (monster.SPD > player.SPD)
+            {
+                Console.WriteLine($"{monster.Name} Moves First");
+                return monster;
+            }
+            Random random = new Random();
+            int turnRoll = random.Next(0, 2);
+            if (turnRoll== 0)
+            {
+                Console.WriteLine($"{player.Name} Moves First");
+                return player;
+            }
+            Console.WriteLine($"{monster.Name} Moves First");
+            return monster;
+        }
+
+        public void StartBattle(Character player, Monster monster)
+        {
+            
+            while (player.HP > 0 && monster.HP > 0)
+            {
+                ShowBattleStatus(player, monster);
+                Entity firstEntity = DetermineTurnOrder(player, monster);
+
+                //if (firstEntity == player)
+                //{
+                //    ShowBattleMenu();
+                //}
+                //else
+                //{
+                //    monster.Attack(player);
+                //}
+
+                ShowBattleMenu();
+                string choice = Console.ReadLine();
+                
+                
+                switch (choice)
+                {
+                    case "1":
+                        if (firstEntity == player)
+                        {
+                            ShowBattleStatus(player, monster);
+                            int damageByPlayer = player.Attack(monster);
+                            Console.WriteLine($"{player.Name} Dealt {damageByPlayer} damage to {monster.Name}!");
+
+                            if (monster.HP <= 0)
+                            {
+                                ShowBattleStatus(player, monster);
+                                Console.WriteLine($"You have defeated the {monster.Name}!");
+                                Console.WriteLine();
+                                return;
+                            }
+                            else
+                            {
+                                int damageByMonster = monster.Attack(player);
+                                Console.WriteLine($"{monster.Name} Dealt {damageByMonster} damage to {player.Name}");
+                            }
+                            if (player.HP <= 0)
+                            {
+                                Console.WriteLine("You Died! Game Over!");
+                            }
+                        }
+                        else
+                        {
+                            ShowBattleStatus(player, monster);
+                            int damageByMonster = monster.Attack(player);
+                            Console.WriteLine($"{monster.Name} Dealt {damageByMonster} damage to {player.Name}!");
+                            if (player.HP <= 0)
+                            {
+                                Console.WriteLine("You Died! Game Over!");
+                                return;
+                            }
+                            else
+                            {
+                                int damageByPlayer = player.Attack(monster);
+                                Console.WriteLine($"{player.Name} Dealt {damageByPlayer} damage to {monster.Name}!");
+                            }
+                            if (monster.HP <= 0)
+                            {
+                                ShowBattleStatus(player, monster);
+                                Console.WriteLine($"You have defeated the {monster.Name}!");
+                                Console.WriteLine();
+                                return;
+                            }
+                        }
+                        break;
+
+                    //case "2":
+                    //    int originalDEF = player.DEF;
+                    //    player.DEF = (int)(player.DEF * 1.2);
+                    //    monster.Attack(player);
+                    //    player.DEF = originalDEF;
+                    //    break;
+                    }
+                }
+            }
+            
+        }
+    }
