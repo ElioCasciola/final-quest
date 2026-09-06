@@ -2,6 +2,7 @@
 using FinalQuest.Entities;
 using FinalQuest.Monsters;
 using System;
+using System.Numerics;
 
 namespace FinalQuest.Game
 {
@@ -42,10 +43,12 @@ namespace FinalQuest.Game
         private void ExecuteAttack(Entity attacker, Entity target)
         {
             int damageDealt = attacker.Attack(target);
-            Console.WriteLine($"{attacker.Name} Dealt {damageDealt} to {target.Name}");
+
+            Console.WriteLine($"{attacker.Name} attacks {target.Name}!");
+            Console.WriteLine($"> {damageDealt} damage dealt");
+            Console.WriteLine();
         }
 
-        // Determines which entity goes first based on speed (SPD) stat. If both have the same SPD(Speed Tie), it randomly selects one to go first.
         private Entity DetermineTurnOrder(Character player, Monster monster)
         {
             if (player.SPD > monster.SPD)
@@ -69,35 +72,52 @@ namespace FinalQuest.Game
             return monster;
         }
 
+        private void ShowBattleHeader()
+        {
+            Console.WriteLine(new string('=', 40));
+            Console.WriteLine("                 BATTLE");
+            Console.WriteLine(new string('=', 40));
+            Console.WriteLine();
+        }
+
+        private void HandleVictory(Character player, Monster monster)
+        {
+            ShowBattleStatus(player, monster);
+            Console.WriteLine($"You have defeated the {monster.Name}!");
+            Console.WriteLine();
+        }
+
+        private void HandleDefeat(Character player, Monster monster)
+        {
+            ShowBattleStatus(player, monster);
+            Console.WriteLine("You Died! Game Over!");
+            Console.WriteLine();
+        }
+
         public void StartBattle(Character player, Monster monster)
         {
-            
-            while (player.HP > 0 && monster.HP > 0)
+            Entity firstEntity = DetermineTurnOrder(player, monster);
+
+            while (!player.IsDead && !monster.IsDead)
             {
                 ShowBattleStatus(player, monster);
-                Entity firstEntity = DetermineTurnOrder(player, monster);
 
                 ShowBattleMenu();
+
                 string choice = Console.ReadLine();
-                
-                
+                Console.Clear();
+
                 switch (choice)
                 {
-                    /*Attack Mechanic
-                     * Gestisce attacchi in base alla SPD
-                     * Esempio: Player con SPD>, se infligge danno letale non viene attaccato dal mostro
-                     */
                     case "1":
+                        ShowBattleHeader();
                         if (firstEntity == player)
                         {
-                            ShowBattleStatus(player, monster);
                             ExecuteAttack(player, monster);
 
                             if (monster.IsDead)
                             {
-                                ShowBattleStatus(player, monster);
-                                Console.WriteLine($"You have defeated the {monster.Name}!");
-                                Console.WriteLine();
+                                HandleVictory(player, monster);
                                 return;
                             }
 
@@ -105,19 +125,16 @@ namespace FinalQuest.Game
 
                             if (player.IsDead)
                             {
-                                Console.WriteLine("You Died! Game Over!");
-                                Console.WriteLine();
-                                return; 
+                                HandleDefeat(player, monster);
+                                return;
                             }
                         }
                         else
                         {
-                            ShowBattleStatus(player, monster);
                             ExecuteAttack(monster, player);
                             if (player.IsDead)
                             {
-                                Console.WriteLine("You Died! Game Over!");
-                                Console.WriteLine();
+                                HandleDefeat(player, monster);
                                 return;
                             }
 
@@ -125,22 +142,23 @@ namespace FinalQuest.Game
 
                             if (monster.IsDead)
                             {
-                                ShowBattleStatus(player, monster);
-                                Console.WriteLine($"You have defeated the {monster.Name}!");
-                                Console.WriteLine();
+                                HandleVictory(player, monster);
                                 return;
                             }
                         }
+
                         break;
 
-                    //case "2":
-                    //    int originalDEF = player.DEF;
-                    //    player.DEF = (int)(player.DEF * 1.2);
-                    //    monster.Attack(player);
-                    //    player.DEF = originalDEF;
-                    //    break;
-                    }
+                    case "2":
+                        int originalDEF = player.DEF;
+                        player.DEF = (int)(player.DEF * 1.2);
+
+                        ExecuteAttack(monster, player);
+
+                        player.DEF = originalDEF;
+                        break;
                 }
-            } 
+            }
         }
     }
+}

@@ -16,7 +16,7 @@ namespace FinalQuest.Game
             Console.WriteLine("=== FINAL QUEST ===");
             Console.WriteLine("What's your name?");
             string name = Console.ReadLine();
-            Console.WriteLine();
+            Console.Clear();
             Character? player = null;
             bool classSelected = false;
 
@@ -27,7 +27,7 @@ namespace FinalQuest.Game
                 Console.WriteLine("2 - Mage");
                 Console.WriteLine("3 - Rogue");
                 string choice = Console.ReadLine();
-                Console.WriteLine();
+                Console.Clear();
 
 
                 switch (choice)
@@ -63,17 +63,21 @@ namespace FinalQuest.Game
                     switch (action)
                     {
                         case "1":
+                            Console.Clear();
                             Explore(player);
                             break;
                         case "2":
+                            Console.Clear();
                             player.ShowStats();
                             break;
                         case "3":
+                            Console.Clear();
                             Console.WriteLine("Goodbye!");
                             gameRunning = false;
                             break;
                         default:
-                        Console.WriteLine("Invalid Choice, Try Again");
+                            Console.Clear();
+                            Console.WriteLine("Invalid Choice, Try Again");
                         break;
 
                     }
