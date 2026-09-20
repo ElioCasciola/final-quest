@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FinalQuest.Entities;
+using FinalQuest.Abilities;
 
 namespace FinalQuest.Characters
 {

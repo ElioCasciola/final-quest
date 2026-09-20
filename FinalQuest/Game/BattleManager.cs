@@ -1,8 +1,7 @@
 ﻿using FinalQuest.Characters;
 using FinalQuest.Entities;
 using FinalQuest.Monsters;
-using System;
-using System.Numerics;
+using FinalQuest.Abilities;
 
 namespace FinalQuest.Game
 {
@@ -157,6 +156,17 @@ namespace FinalQuest.Game
 
                         player.DEF = originalDEF;
                         break;
+
+                   /* case "3":
+                        if(ExecuteAbility == true)
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                        break;*/
                 }
             }
         }
