@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
+using FinalQuest.Abilities;
 
 namespace FinalQuest.Entities
 {
@@ -14,6 +15,7 @@ namespace FinalQuest.Entities
         public int ATT { get; set; }
         public int DEF { get; set; }
         public int SPD { get; set; }
+        public List<Ability> Abilities { get; } = new List<Ability>();
 
         public bool IsDead => HP <= 0;
 
@@ -43,13 +45,14 @@ namespace FinalQuest.Entities
         {
             int damage = ATT - target.DEF;
 
-            if (damage < 1)
-            {
-                damage = 1;
-            }
+            return target.TakeDamage(damage);
+        }
 
-            target.HP = target.HP - damage;
-            return damage;
+        public int TakeDamage(int damage)
+        {
+            int actualDamage = Math.Max(1, damage);
+            HP = Math.Max(0, HP - actualDamage);
+            return actualDamage;
         }
     }
 }

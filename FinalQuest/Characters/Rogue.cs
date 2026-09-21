@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalQuest.Abilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,6 +16,8 @@ namespace FinalQuest.Characters
             ATT = 16;
             DEF = 9;
             SPD = 20;
+
+            Abilities.Add(new Backstab());
         }
 
         public override CharacterClass Job

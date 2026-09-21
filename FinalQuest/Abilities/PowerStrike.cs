@@ -2,16 +2,16 @@
 
 namespace FinalQuest.Abilities
 {
-    internal class Fireball : Ability
+    internal class PowerStrike : Ability
     {
-        public Fireball()
-            : base("Fireball", "Launches a powerful ball of fire", 15) 
+        public PowerStrike()
+            : base("Power Strike", "Delivers a powerful strike with double attack power.", 10)
         {
         }
 
         protected override int ApplyEffect(Entity user, Entity target)
         {
-            int damage = user.ATT + 10 - target.DEF;
+            int damage = user.ATT * 2 - target.DEF;
 
             return target.TakeDamage(damage);
         }

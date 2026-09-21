@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FinalQuest.Abilities;
 
 namespace FinalQuest.Characters
 {
@@ -15,6 +13,8 @@ namespace FinalQuest.Characters
             ATT = 22;
             DEF = 6;
             SPD = 10;
+
+            Abilities.Add(new Fireball());
         }
 
         public override CharacterClass Job
