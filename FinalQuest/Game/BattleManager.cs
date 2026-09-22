@@ -78,6 +78,22 @@ namespace FinalQuest.Game
             Console.WriteLine(new string('=', 40));
             Console.WriteLine();
         }
+        private void ShowAbilityMenu(Entity user)
+        {
+            Console.WriteLine("=== ABILITIES ===");
+
+            for (int i = 0; i < user.Abilities.Count; i++)
+            {
+                Ability ability = user.Abilities[i];
+
+                Console.WriteLine(
+                    $"{i + 1} - {ability.Name} ({ability.MPCost} MP)");
+
+                Console.WriteLine($"    {ability.Description}");
+            }
+
+            Console.WriteLine("0 - Back");
+        }
 
         private void HandleVictory(Character player, Monster monster)
         {
@@ -157,16 +173,14 @@ namespace FinalQuest.Game
                         player.DEF = originalDEF;
                         break;
 
-                   /* case "3":
-                        if(ExecuteAbility == true)
-                        {
+                   case "3":
+                        ShowAbilityMenu(player);
 
-                        }
-                        else
-                        {
+                        string abilityChoice = Console.ReadLine();
+                        bool isValidNumber = int.TryParse(abilityChoice, out int abilityNumber);
 
-                        }
-                        break;*/
+                        break;
+                        
                 }
             }
         }
